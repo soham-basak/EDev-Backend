@@ -1,8 +1,8 @@
-import dotenv from "dotenv";
-import { z } from "zod";
+import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config({
-  path: "./.env",
+  path: './.env',
 });
 
 export const env = z
@@ -13,7 +13,7 @@ export const env = z
     GITHUB_CLIENT_SECRET: z.string().min(2),
     GOOGLE_CLIENT_ID: z.string().min(2),
     GOOGLE_CLIENT_SECRET: z.string().min(2),
-    NODE_ENV: z.enum(["DEV", "PROD"]),
+    NODE_ENV: z.enum(['DEV', 'PROD']),
     PORT: z.string(),
     CLIENT_DOMAIN: z.string().url(),
   })

@@ -1,4 +1,4 @@
-import { CookieOptions } from "hono/utils/cookie";
+import { CookieOptions } from 'hono/utils/cookie';
 
 export type GitHubUser = {
   login: string;
@@ -12,7 +12,7 @@ export type GoogleUser = {
   picture: string;
 };
 
-export type AuthProviders = ["Google", "GitHub"];
+export type AuthProviders = ['Google', 'GitHub'];
 
 export type ConfigOpts = {
   port: string;
@@ -20,6 +20,6 @@ export type ConfigOpts = {
 };
 
 export type Variables = {
-  sessionId: string;
-  userId: string;
+  sessionId: string | null;
+  userId: string | null;
 };

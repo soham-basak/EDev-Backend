@@ -1,3 +1,3 @@
-import { AuthProviders as AuthProvidersType } from "../../types";
+import { AuthProviders as AuthProvidersType } from '../../types';
 
-export const AuthProvider: AuthProvidersType = ["Google", "GitHub"];
+export const AuthProvider: AuthProvidersType = ['Google', 'GitHub'];

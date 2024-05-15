@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import { Context } from "hono";
+import { z } from 'zod';
+import { zValidator } from '@hono/zod-validator';
+import { Context } from 'hono';
 
 type ExtractDetails<T> = T extends Context<any, any, infer U> ? U : never;
 
@@ -21,10 +21,8 @@ const callbackValidationSchema = z.object({
   state: z.string().min(2),
 });
 
-export const callbackValidator = zValidator("query", callbackValidationSchema);
-export type CallbackValidator = ExtractDetails<
-  Parameters<typeof callbackValidator>["0"]
->;
+export const callbackValidator = zValidator('query', callbackValidationSchema);
+export type CallbackValidator = ExtractDetails<Parameters<typeof callbackValidator>['0']>;
 
 export type GoogleUserValidation = z.infer<typeof googleUserValidationSchema>;
 export type GithubUserValidation = z.infer<typeof githubUserValidationSchema>;
