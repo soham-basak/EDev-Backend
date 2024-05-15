@@ -12,6 +12,8 @@ async function main() {
       fetch: server.fetch,
       port: PORT,
     });
+
+    console.log('auth service started at port:', PORT);
   } catch (err) {
     console.error(err);
     process.exit(1);

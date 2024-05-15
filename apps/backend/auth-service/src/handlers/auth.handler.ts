@@ -22,7 +22,6 @@ import {
 import { env } from '../lib/validations/env';
 import { lucia } from '../auth';
 import { Variables } from '../../types';
-import { db } from '../lib/db/connection';
 
 export const githubLoginHandler: Handler = async (c) => {
   try {

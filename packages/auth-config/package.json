@@ -1,0 +1,13 @@
+{
+  "name": "@repo/auth-config",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "hono": "^4.3.6",
+    "typescript": "latest"
+  }
+}
