@@ -88,6 +88,16 @@ importers:
         specifier: ^4.7.1
         version: 4.10.2
 
+  apps/backend/comment-service:
+    dependencies:
+      hono:
+        specifier: ^4.3.7
+        version: 4.3.7
+    devDependencies:
+      '@types/bun':
+        specifier: latest
+        version: 1.1.2
+
   apps/client/test:
     dependencies:
       react:
@@ -1966,6 +1976,12 @@ packages:
       '@babel/types': 7.24.5
     dev: true
 
+  /@types/bun@1.1.2:
+    resolution: {integrity: sha512-pRBDD3EDqPf83qe95i3EpYu5G2J8bbb78a3736vnCm2K8YWtEE5cvJUq2jkKvJhW07YTfQtbImywIwRhWL8z3Q==}
+    dependencies:
+      bun-types: 1.1.8
+    dev: true
+
   /@types/eslint@8.56.10:
     resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
     dependencies:
@@ -2756,6 +2772,13 @@ packages:
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
+    dev: true
+
+  /bun-types@1.1.8:
+    resolution: {integrity: sha512-dwhfuUKSGK8hm5Llcvb5+ejRh+4mIt8ibObJVKhZBsi0ScpXmt+AlaS1eDW6uRXCHj084Qt0kIqAJ08/7ZGC9Q==}
+    dependencies:
+      '@types/node': 20.12.12
+      '@types/ws': 8.5.10
     dev: true
 
   /busboy@1.6.0:
@@ -4528,6 +4551,11 @@ packages:
 
   /hono@4.3.6:
     resolution: {integrity: sha512-2IqXwrxWF4tG2AR7b5tMYn+KEnWK8UvdC/NUSbOKWj/Kj11OJqel58FxyiXLK5CcKLiL8aGtTe4lkBKXyaHMBQ==}
+    engines: {node: '>=16.0.0'}
+    dev: false
+
+  /hono@4.3.7:
+    resolution: {integrity: sha512-GXlsGnCAwGosu+COwYyYC8MwOY2L6Ihg9V1znYdMD8DHCJl+13Nk4o8dsBYJpae4oujjw24jBaITuYWVq2+V8Q==}
     engines: {node: '>=16.0.0'}
     dev: false
 
