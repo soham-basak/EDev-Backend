@@ -1,4 +1,4 @@
-import { NeonDbError } from '@neondatabase/serverless';
+import { NeonDbError, DatabaseError } from '@neondatabase/serverless';
 import { OAuth2RequestError } from 'arctic';
 import { DrizzleError } from 'drizzle-orm';
 import { Context } from 'hono';
@@ -37,6 +37,15 @@ export const handleErrors = (c: Context, error: unknown) => {
     return c.json(
       {
         errorMsg: 'something went wrong',
+      },
+      500
+    );
+  }
+  if (error instanceof DatabaseError) {
+    return c.json(
+      {
+        errorMsg: 'something went wrong',
+        err: error.message,
       },
       500
     );

@@ -5,6 +5,7 @@ import { cors } from 'hono/cors';
 import { authRoutes } from './routes/auth.routes';
 import { sessionMiddleware } from './middlewares/auth.middleware';
 import { Variables } from '../types';
+import { googleLoginHandler } from './handlers/auth.handler';
 
 dotenv.config({
   path: './.env',
@@ -22,18 +23,13 @@ const createServer = () => {
     })
   );
 
-  app.route('/auth', authRoutes);
+  app.get('/healthcheck', (c) => {
+    return c.text('OK', 200);
+  });
 
   app.use('*', sessionMiddleware);
 
-  // app.get("/cookies", async (c) => {
-  //   const user = c.get("user");
-  //   const dbUser = await db
-  //     .select()
-  //     .from(userTable)
-  //     .where(eq(userTable.id, user.id));
-  //   return c.json(dbUser);
-  // });
+  app.route('/auth', authRoutes);
 
   return app;
 };

@@ -36,8 +36,4 @@ export const sessions = pgTable('sessions', {
   })
     .defaultNow()
     .notNull(),
-  updatedAt: timestamp('updated_at', {
-    mode: 'date',
-    withTimezone: true,
-  }).notNull(),
 });

@@ -1,10 +1,10 @@
-import { Pool } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pg from 'pg';
+
 import { env } from '../validations/env';
-import { neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
 
-const pool = new Pool({ connectionString: env.DB_URL });
-neonConfig.webSocketConstructor = ws;
+const sql = new pg.Pool({ connectionString: env.DB_URL });
 
-export const db = drizzle(pool);
+await sql.connect();
+
+export const db = drizzle(sql);

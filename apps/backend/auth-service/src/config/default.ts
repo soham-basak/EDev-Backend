@@ -7,7 +7,7 @@ export default {
   cookieOpts: {
     path: '/',
     secure: env.NODE_ENV === 'PROD',
-    sameSite: 'Strict',
+    sameSite: 'Lax',
     domain: makeDomain(),
     httpOnly: true,
     maxAge: 60 * 10,

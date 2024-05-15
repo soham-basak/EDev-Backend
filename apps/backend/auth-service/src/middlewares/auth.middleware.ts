@@ -12,9 +12,7 @@ export const sessionMiddleware: MiddlewareHandler<{
 
     if (!cookies) {
       console.error('sessionMiddleware error: ', 'no cookie found');
-      return c.json({
-        errorMsg: 'no cookie found',
-      });
+      return next();
     }
 
     const sessionId = lucia.readSessionCookie(cookies);
