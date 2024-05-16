@@ -7,6 +7,13 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@hono/prometheus':
+        specifier: ^1.0.1
+        version: 1.0.1(hono@4.3.7)(prom-client@15.1.2)
+      prom-client:
+        specifier: ^15.1.2
+        version: 15.1.2
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -93,13 +100,22 @@ importers:
 
   apps/backend/comment-service:
     dependencies:
+      '@hono/node-server':
+        specifier: ^1.11.1
+        version: 1.11.1
+      '@repo/auth-config':
+        specifier: workspace:*
+        version: link:../../../packages/auth-config
       hono:
         specifier: ^4.3.7
         version: 4.3.7
     devDependencies:
-      '@types/bun':
-        specifier: latest
-        version: 1.1.2
+      '@types/node':
+        specifier: ^20.11.17
+        version: 20.12.12
+      tsx:
+        specifier: ^4.7.1
+        version: 4.10.2
 
   apps/client/test:
     dependencies:
@@ -1198,6 +1214,16 @@ packages:
     engines: {node: '>=18.14.1'}
     dev: false
 
+  /@hono/prometheus@1.0.1(hono@4.3.7)(prom-client@15.1.2):
+    resolution: {integrity: sha512-PjMbjAppCgbvRP2aLxqJc1XJLxfmg4dLsS5R5ITt7qCf9Ab/xSRul/LHNVvYK2/ECi3BOPprSnlSizksBJmXBQ==}
+    peerDependencies:
+      hono: '>=3.*'
+      prom-client: ^15.0.0
+    dependencies:
+      hono: 4.3.7
+      prom-client: 15.1.2
+    dev: false
+
   /@hono/zod-validator@0.2.1(hono@4.3.6)(zod@3.23.8):
     resolution: {integrity: sha512-HFoxln7Q6JsE64qz2WBS28SD33UB2alp3aRKmcWnNLDzEL1BLsWfbdX6e1HIiUprHYTIXf5y7ax8eYidKUwyaA==}
     peerDependencies:
@@ -1716,6 +1742,11 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
+  /@opentelemetry/api@1.8.0:
+    resolution: {integrity: sha512-I/s6F7yKUDdtMsoBWXJe8Qz40Tui5vsuKCWJEWVL+5q9sSWRzzx6v2KeNsOBEwd94j0eWkpWCH4yB6rZg9Mf0w==}
+    engines: {node: '>=8.0.0'}
+    dev: false
+
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -1967,12 +1998,6 @@ packages:
     resolution: {integrity: sha512-WXCyOcRtH37HAUkpXhUduaxdm82b4GSlyTqajXviN4EfiuPgNYR109xMCKvpl6zPIpua0DGlMEDCq+g8EdoheQ==}
     dependencies:
       '@babel/types': 7.24.5
-    dev: true
-
-  /@types/bun@1.1.2:
-    resolution: {integrity: sha512-pRBDD3EDqPf83qe95i3EpYu5G2J8bbb78a3736vnCm2K8YWtEE5cvJUq2jkKvJhW07YTfQtbImywIwRhWL8z3Q==}
-    dependencies:
-      bun-types: 1.1.8
     dev: true
 
   /@types/eslint@8.56.10:
@@ -2704,6 +2729,10 @@ packages:
     engines: {node: '>=10.0.0'}
     dev: true
 
+  /bintrees@1.0.2:
+    resolution: {integrity: sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw==}
+    dev: false
+
   /bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
     dependencies:
@@ -2756,13 +2785,6 @@ packages:
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
-    dev: true
-
-  /bun-types@1.1.8:
-    resolution: {integrity: sha512-dwhfuUKSGK8hm5Llcvb5+ejRh+4mIt8ibObJVKhZBsi0ScpXmt+AlaS1eDW6uRXCHj084Qt0kIqAJ08/7ZGC9Q==}
-    dependencies:
-      '@types/node': 20.12.12
-      '@types/ws': 8.5.10
     dev: true
 
   /busboy@1.6.0:
@@ -5779,6 +5801,14 @@ packages:
     hasBin: true
     dev: true
 
+  /prom-client@15.1.2:
+    resolution: {integrity: sha512-on3h1iXb04QFLLThrmVYg1SChBQ9N1c+nKAjebBjokBqipddH3uxmOUcEkTnzmJ8Jh/5TSUnUqS40i2QB2dJHQ==}
+    engines: {node: ^16 || ^18 || >=20}
+    dependencies:
+      '@opentelemetry/api': 1.8.0
+      tdigest: 0.1.2
+    dev: false
+
   /prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
     dependencies:
@@ -6420,6 +6450,12 @@ packages:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /tdigest@0.1.2:
+    resolution: {integrity: sha512-+G0LLgjjo9BZX2MfdvPfH+MKLCrxlXSYec5DaPYP1fe6Iyhf0/fSmJ0bFiZ1F8BT6cGXl2LpltQptzjXKWEkKA==}
+    dependencies:
+      bintrees: 1.0.2
+    dev: false
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
