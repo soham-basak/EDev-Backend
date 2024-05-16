@@ -21,7 +21,11 @@ const callbackValidationSchema = z.object({
   state: z.string().min(2),
 });
 
-export const callbackValidator = zValidator('query', callbackValidationSchema);
+export const callbackValidator = zValidator('query', callbackValidationSchema, (result, c) => {
+  if (!result.success) {
+    return c.json({ errorMsg: result.error.flatten().fieldErrors });
+  }
+});
 export type CallbackValidator = ExtractDetails<Parameters<typeof callbackValidator>['0']>;
 
 export type GoogleUserValidation = z.infer<typeof googleUserValidationSchema>;

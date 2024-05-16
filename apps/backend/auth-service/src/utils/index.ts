@@ -59,7 +59,8 @@ export const handleErrors = (c: Context, error: unknown) => {
   return c.json(errorMsg, status);
 };
 
-export const redirectToAuthError = (c: Context, { errorMsg, status }: HandleError) => {
+export const redirectToAuthError = (c: Context, error: unknown) => {
+  const { errorMsg, status } = returnError(error);
   return c.redirect(`${env.CLIENT_DOMAIN}/auth/error?error=${errorMsg}&status=${status}`);
 };
 

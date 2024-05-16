@@ -13,7 +13,7 @@ import { getCookie, setCookie } from 'hono/cookie';
 
 import config from '../config/default';
 import { HTTPException } from 'hono/http-exception';
-import { handleErrors, makeCookieOpts } from '../utils';
+import { handleErrors, redirectToAuthError, makeCookieOpts } from '../utils';
 import {
   CallbackValidator,
   githubUserValidationSchema,
@@ -109,7 +109,7 @@ export const githubCallbackHandler: Handler = async (c: Context<{}, '', Callback
   } catch (err) {
     console.error('githubCallbackHandler error: ', err);
 
-    return handleErrors(c, err);
+    return redirectToAuthError(c, err);
   }
 };
 
@@ -157,7 +157,7 @@ export const googleCallbackHandler: Handler = async (c: Context<{}, '', Callback
   } catch (err) {
     console.error('googleCallbackHandler error: ', err);
 
-    return handleErrors(c, err);
+    return redirectToAuthError(c, err);
   }
 };
 
