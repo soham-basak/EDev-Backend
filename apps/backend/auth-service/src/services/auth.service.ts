@@ -10,7 +10,17 @@ import { makeCookieOpts } from '../utils';
 import { nanoid } from 'nanoid';
 
 export const getUserByEmail = async (email: string) => {
-  const [user] = await db.select().from(users).where(eq(users.email, email));
+  const [user] = await db
+    .select({
+      id: users.id,
+      username: users.username,
+      email: users.email,
+      image: users.image,
+      authProvider: users.authProvider,
+      createdAt: users.createdAt,
+    })
+    .from(users)
+    .where(eq(users.email, email));
 
   if (!user) {
     return null;
@@ -20,7 +30,17 @@ export const getUserByEmail = async (email: string) => {
 };
 
 export const getUserById = async (userId: string) => {
-  const [user] = await db.select().from(users).where(eq(users.id, userId));
+  const [user] = await db
+    .select({
+      id: users.id,
+      username: users.username,
+      email: users.email,
+      image: users.image,
+      authProvider: users.authProvider,
+      createdAt: users.createdAt,
+    })
+    .from(users)
+    .where(eq(users.id, userId));
 
   if (!user) {
     return null;

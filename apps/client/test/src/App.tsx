@@ -29,6 +29,17 @@ const App = () => {
       </button>
       <button
         onClick={async () => {
+          const res = await fetch('/api/auth/logout', {
+            method: 'POST',
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        logout
+      </button>
+      <button
+        onClick={async () => {
           const res = await fetch('/api/auth/user', {
             method: 'GET',
           });

@@ -176,6 +176,8 @@ export const logoutHandler: Handler<{ Variables: Variables }> = async (c) => {
     const sessionCookie = lucia.createBlankSessionCookie();
 
     setCookie(c, sessionCookie.name, sessionCookie.value, makeCookieOpts(sessionCookie.attributes));
+
+    return c.json({}, 200);
   } catch (err) {
     console.error('googleCallbackHandler error: ', err);
 

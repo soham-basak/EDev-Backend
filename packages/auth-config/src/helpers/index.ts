@@ -12,7 +12,6 @@ export type User = {
   image: string | null;
   authProvider: 'Google' | 'GitHub';
   createdAt: Date;
-  updatedAt: Date;
 };
 
 export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
@@ -22,17 +21,19 @@ export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
       {
         withCredentials: true,
         headers: {
+          'Content-Type': 'application/json',
           Cookie: c.req.header('cookie'),
         },
       }
     );
 
-    if (status !== 200 && !data?.id) {
+    if (status !== 200 || !data?.id) {
       c.set('user', null);
       return next();
     }
 
     c.set('user', data);
+    console.log('session with userId:', data.id);
 
     return next();
   } catch (err) {
@@ -46,9 +47,12 @@ export const withAuthMiddleware: MiddlewareHandler<{
   const user = c.get('user');
 
   if (!user?.id) {
-    return c.json({
-      errorMsg: 'no session found',
-    });
+    return c.json(
+      {
+        errorMsg: 'no session found',
+      },
+      401
+    );
   }
 
   return next();

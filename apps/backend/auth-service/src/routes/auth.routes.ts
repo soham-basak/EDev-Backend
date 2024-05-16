@@ -28,6 +28,6 @@ authRoutes.get(
   googleCallbackHandler
 );
 
-authRoutes.post('/logout', withAuthMiddleware, logoutHandler);
-
 authRoutes.get('/user', withAuthMiddleware, getUserSessionHandler);
+
+authRoutes.post('/logout', withAuthMiddleware, logoutHandler);

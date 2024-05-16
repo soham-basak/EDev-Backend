@@ -1,72 +1,66 @@
 import { NeonDbError, DatabaseError } from '@neondatabase/serverless';
 import { OAuth2RequestError } from 'arctic';
 import { DrizzleError } from 'drizzle-orm';
-import { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { CookieOptions } from 'hono/utils/cookie';
 import { Cookie } from 'lucia';
 import { z } from 'zod';
 import { env } from '../lib/validations/env';
+import { StatusCode } from 'hono/utils/http-status';
+import { Context } from 'hono';
 
-export const handleErrors = (c: Context, error: unknown) => {
+type HandleError = {
+  status: StatusCode;
+  errorMsg: string;
+};
+
+export const returnError = (error: unknown): HandleError => {
   if (error instanceof HTTPException) {
-    return c.json(
-      {
-        errorMsg: error.message,
-      },
-      error.status
-    );
+    return {
+      errorMsg: error.message,
+      status: error.status,
+    };
   }
   if (error instanceof z.ZodError) {
-    return c.json(
-      {
-        errorMsg: 'incorrect data passed',
-      },
-      422
-    );
+    return {
+      status: 422,
+      errorMsg: 'incorrect data passed',
+    };
   }
   if (error instanceof DrizzleError) {
-    return c.json(
-      {
-        errorMsg: 'something went wrong',
-      },
-      500
-    );
+    return {
+      status: 500,
+      errorMsg: 'something went wrong',
+    };
   }
   if (error instanceof NeonDbError) {
-    return c.json(
-      {
-        errorMsg: 'something went wrong',
-      },
-      500
-    );
+    return {
+      status: 500,
+      errorMsg: 'something went wrong',
+    };
   }
   if (error instanceof DatabaseError) {
-    return c.json(
-      {
-        errorMsg: 'something went wrong',
-        err: error.message,
-      },
-      500
-    );
+    return {
+      status: 500,
+      errorMsg: 'something went wrong',
+    };
   }
   if (error instanceof OAuth2RequestError) {
-    return c.json(error.message, 500);
+    return { status: 500, errorMsg: 'oauth2 error' };
   }
-  if (error instanceof Error) {
-    return c.json(
-      {
-        errorMsg: error.message,
-      },
-      error?.cause ?? 500
-    );
-  }
-  return c.json(
-    {
-      errorMsg: 'something went wrong',
-    },
-    500
-  );
+  return {
+    status: 500,
+    errorMsg: 'something went wrong',
+  };
+};
+
+export const handleErrors = (c: Context, error: unknown) => {
+  const { errorMsg, status } = returnError(error);
+  return c.json(errorMsg, status);
+};
+
+export const redirectToAuthError = (c: Context, { errorMsg, status }: HandleError) => {
+  return c.redirect(`${env.CLIENT_DOMAIN}/auth/error?error=${errorMsg}&status=${status}`);
 };
 
 export const makeCookieOpts = (opts: Cookie['attributes']): CookieOptions => {

@@ -11,7 +11,6 @@ export const sessionMiddleware: MiddlewareHandler<{
     const cookies = c.req.header('cookie');
 
     if (!cookies) {
-      console.error('sessionMiddleware error: ', 'no cookie found');
       return next();
     }
 
@@ -25,13 +24,13 @@ export const sessionMiddleware: MiddlewareHandler<{
     }
     const { session, user } = await lucia.validateSession(sessionId);
 
-    if (!session || !user) {
-      console.error('sessionMiddleware info: ', 'no session or user found from cookies');
+    if (!session || !user || session.userId !== user.id) {
       return next();
     }
 
     c.set('sessionId', session.id);
     c.set('userId', user.id);
+    console.log('session with userId:', user.id);
 
     return next();
   } catch (err) {
@@ -48,9 +47,12 @@ export const withAuthMiddleware: MiddlewareHandler<{
   const userId = c.get('userId');
 
   if (!sessionId || !userId) {
-    return c.json({
-      errorMsg: 'no session found',
-    });
+    return c.json(
+      {
+        errorMsg: 'no session found',
+      },
+      401
+    );
   }
 
   return next();
