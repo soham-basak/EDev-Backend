@@ -19,8 +19,5 @@
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
-    "@hono/prometheus": "^1.0.1",
-    "prom-client": "^15.1.2"
-  }
+  "dependencies": {}
 }

@@ -1,5 +1,5 @@
 import { MiddlewareHandler } from 'hono';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export type Variables = {
   user: User | null;
@@ -37,7 +37,15 @@ export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
 
     return next();
   } catch (err) {
+    if (err instanceof AxiosError) {
+      console.error('authSessionMiddleware error: ', err.response?.data);
+
+      return c.json({ errorMsg: err.response?.data?.errorMsg });
+    }
+
     console.error('authSessionMiddleware error: ', err);
+
+    return c.json({ errorMsg: 'something went wrong' });
   }
 };
 
