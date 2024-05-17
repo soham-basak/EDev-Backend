@@ -1,9 +1,12 @@
 import { MiddlewareHandler } from 'hono';
 import { lucia } from '../auth';
 import { Variables } from '../../types';
-import { env } from '../lib/validations/env';
+import { globalEnv } from '@repo/util-config';
 import { handleErrors } from '../utils';
 
+// sessionMiddleware() gets the cookies from the header.
+// Validates the session cookie and sets the sessionId
+// and userId in Context.
 export const sessionMiddleware: MiddlewareHandler<{
   Variables: Variables;
 }> = async (c, next) => {
@@ -14,6 +17,7 @@ export const sessionMiddleware: MiddlewareHandler<{
       return next();
     }
 
+    // Lucia reads the session cookie.
     const sessionId = lucia.readSessionCookie(cookies);
 
     if (!sessionId) {
@@ -22,6 +26,8 @@ export const sessionMiddleware: MiddlewareHandler<{
 
       return next();
     }
+
+    // Validates the session in cookie with the session in DB
     const { session, user } = await lucia.validateSession(sessionId);
 
     if (!session || !user || session.userId !== user.id) {
@@ -36,10 +42,14 @@ export const sessionMiddleware: MiddlewareHandler<{
   } catch (err) {
     console.error('sessionMiddleware error: ', err);
 
-    return handleErrors(c, err);
+    return next();
   }
 };
 
+// withAuthMiddleware() checks if there is already session
+// and userId present in Context.
+// If not it blocks the request else forwards
+// to the next handler.
 export const withAuthMiddleware: MiddlewareHandler<{
   Variables: Variables;
 }> = async (c, next) => {
@@ -58,6 +68,10 @@ export const withAuthMiddleware: MiddlewareHandler<{
   return next();
 };
 
+// withoutAuthMiddleware() checks if there is already session
+// and userId present in Context.
+// If not it forwards the reqeust to the next handler
+// else redirects to the client domain.
 export const withoutAuthMiddleware: MiddlewareHandler<{
   Variables: Variables;
 }> = async (c, next) => {
@@ -68,5 +82,5 @@ export const withoutAuthMiddleware: MiddlewareHandler<{
     return next();
   }
 
-  return c.redirect(env.CLIENT_DOMAIN, 302);
+  return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
 };

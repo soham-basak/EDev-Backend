@@ -3,9 +3,11 @@ import createServer from './server';
 import config from './config/default';
 
 async function main() {
+  // Creates an instance of the main server.
+  // Returns an the instance of the hono server.
   const server = createServer();
 
-  const PORT = Number(config.port ?? '5000');
+  const PORT = Number(config.port ?? '3000');
 
   try {
     serve({
@@ -15,7 +17,7 @@ async function main() {
 
     console.log('auth service started at port:', PORT);
   } catch (err) {
-    console.error(err);
+    console.error('auth service shutting down', err);
     process.exit(1);
   }
 }

@@ -5,6 +5,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@repo/util-config": "workspace:*",
     "@hono/node-server": "^1.11.1",
     "@hono/zod-validator": "^0.2.1",
     "@lucia-auth/adapter-drizzle": "^1.0.7",

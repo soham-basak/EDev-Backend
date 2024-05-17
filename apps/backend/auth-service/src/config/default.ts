@@ -7,7 +7,7 @@ export default {
   cookieOpts: {
     path: '/',
     secure: env.NODE_ENV === 'PROD',
-    sameSite: 'Lax',
+    sameSite: 'Lax', // Lax is only used as cookie policy for OAuth verifier cookie.
     domain: makeDomain(),
     httpOnly: true,
     maxAge: 60 * 10,

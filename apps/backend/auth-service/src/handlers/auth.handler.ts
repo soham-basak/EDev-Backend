@@ -19,10 +19,14 @@ import {
   githubUserValidationSchema,
   googleUserValidationSchema,
 } from '../lib/validations/auth.validations';
-import { env } from '../lib/validations/env';
+import { globalEnv } from '@repo/util-config';
 import { lucia } from '../auth';
 import { Variables } from '../../types';
 
+// GitHub Login Handler
+// POST request
+// Returns an URL which forwards the user to GitHub
+// login page.
 export const githubLoginHandler: Handler = async (c) => {
   try {
     const { state, url } = await createGitHubAuthorizationURL();
@@ -44,6 +48,10 @@ export const githubLoginHandler: Handler = async (c) => {
   }
 };
 
+// Goolge Login Handler
+// POST request
+// Returns an URL which forwards the user to Google
+// login page.
 export const googleLoginHandler: Handler = async (c) => {
   try {
     const { state, codeVerifier, url } = await createGoogleAuthorizationURL();
@@ -66,6 +74,11 @@ export const googleLoginHandler: Handler = async (c) => {
   }
 };
 
+// GitHub Callback Handler
+// GET request
+// Creates user session if user already exists else
+// creates an user and the session.
+// Redirects the user to the client domain.
 export const githubCallbackHandler: Handler = async (c: Context<{}, '', CallbackValidator>) => {
   try {
     const { code, state } = c.req.valid('query');
@@ -85,7 +98,7 @@ export const githubCallbackHandler: Handler = async (c: Context<{}, '', Callback
 
     if (existingUser?.id) {
       await createSession(c, existingUser.id);
-      return c.redirect(env.CLIENT_DOMAIN, 302);
+      return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
     }
 
     const { userId } = await createUser({
@@ -105,7 +118,7 @@ export const githubCallbackHandler: Handler = async (c: Context<{}, '', Callback
 
     await createSession(c, userId);
 
-    return c.redirect(env.CLIENT_DOMAIN, 302);
+    return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
   } catch (err) {
     console.error('githubCallbackHandler error: ', err);
 
@@ -113,6 +126,11 @@ export const githubCallbackHandler: Handler = async (c: Context<{}, '', Callback
   }
 };
 
+// Goolge Callback Handler
+// GET request
+// Creates user session if user already exists else
+// creates an user and the session.
+// Redirects the user to the client domain.
 export const googleCallbackHandler: Handler = async (c: Context<{}, '', CallbackValidator>) => {
   try {
     const { code, state } = c.req.valid('query');
@@ -133,7 +151,7 @@ export const googleCallbackHandler: Handler = async (c: Context<{}, '', Callback
 
     if (existingUser?.id) {
       await createSession(c, existingUser.id);
-      return c.redirect(env.CLIENT_DOMAIN, 302);
+      return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
     }
 
     const { userId } = await createUser({
@@ -153,7 +171,7 @@ export const googleCallbackHandler: Handler = async (c: Context<{}, '', Callback
 
     await createSession(c, userId);
 
-    return c.redirect(env.CLIENT_DOMAIN, 302);
+    return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
   } catch (err) {
     console.error('googleCallbackHandler error: ', err);
 
@@ -161,6 +179,9 @@ export const googleCallbackHandler: Handler = async (c: Context<{}, '', Callback
   }
 };
 
+// Logout Handler
+// POST request
+// Deletes the current session cookie.
 export const logoutHandler: Handler<{ Variables: Variables }> = async (c) => {
   try {
     const sessionId = c.get('sessionId');
@@ -185,6 +206,10 @@ export const logoutHandler: Handler<{ Variables: Variables }> = async (c) => {
   }
 };
 
+// Get User Handler
+// GET request
+// Gets the session from the DB by using the userId in Context.
+// Returns the user.
 export const getUserSessionHandler: Handler<{ Variables: Variables }> = async (c) => {
   try {
     const userId = c.get('userId');

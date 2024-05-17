@@ -5,6 +5,9 @@ dotenv.config({
   path: './.env',
 });
 
+// Environment Variables validation for Auth-Service.
+// Will thorw an error and crash the app if variables
+// are not set in the .env file correctly.
 export const env = z
 
   .object({
@@ -15,6 +18,5 @@ export const env = z
     GOOGLE_CLIENT_SECRET: z.string().min(2),
     NODE_ENV: z.enum(['DEV', 'PROD']),
     PORT: z.string(),
-    CLIENT_DOMAIN: z.string().url(),
   })
   .parse(process.env);

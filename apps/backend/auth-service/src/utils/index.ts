@@ -5,15 +5,18 @@ import { HTTPException } from 'hono/http-exception';
 import { CookieOptions } from 'hono/utils/cookie';
 import { Cookie } from 'lucia';
 import { z } from 'zod';
-import { env } from '../lib/validations/env';
+import { globalEnv } from '@repo/util-config';
 import { StatusCode } from 'hono/utils/http-status';
 import { Context } from 'hono';
+import { env } from '../lib/validations/env';
 
 type HandleError = {
   status: StatusCode;
   errorMsg: string;
 };
 
+// returnError() takes error of type unknown as a paramter.
+// Returns an error message.
 export const returnError = (error: unknown): HandleError => {
   if (error instanceof HTTPException) {
     return {
@@ -54,14 +57,22 @@ export const returnError = (error: unknown): HandleError => {
   };
 };
 
+// handleErrors() takes c of type Context by Hono and
+// error as type unknown as parameters.
+// Returns an appropriate error message to the client
+// as response.
 export const handleErrors = (c: Context, error: unknown) => {
   const { errorMsg, status } = returnError(error);
   return c.json(errorMsg, status);
 };
 
+// handleErrors() takes c of type Context by Hono and
+// error as type unknown as parameters.
+// Redirects the user to an auth error page with status
+// and an error message as query params.
 export const redirectToAuthError = (c: Context, error: unknown) => {
   const { errorMsg, status } = returnError(error);
-  return c.redirect(`${env.CLIENT_DOMAIN}/auth/error?error=${errorMsg}&status=${status}`);
+  return c.redirect(`${globalEnv.CLIENT_DOMAIN}/auth/error?error=${errorMsg}&status=${status}`);
 };
 
 export const makeCookieOpts = (opts: Cookie['attributes']): CookieOptions => {
@@ -81,7 +92,7 @@ export const makeCookieOpts = (opts: Cookie['attributes']): CookieOptions => {
 };
 
 export const makeDomain = () => {
-  const DOMAIN = env.CLIENT_DOMAIN;
+  const DOMAIN = globalEnv.CLIENT_DOMAIN;
 
   if (env.NODE_ENV !== 'PROD') {
     return 'localhost';

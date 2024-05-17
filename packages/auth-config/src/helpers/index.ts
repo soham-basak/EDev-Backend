@@ -33,7 +33,6 @@ export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
     }
 
     c.set('user', data);
-    console.log('session with userId:', data.id);
 
     return next();
   } catch (err) {
