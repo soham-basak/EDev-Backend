@@ -23,7 +23,7 @@ const callbackValidationSchema = z.object({
 
 export const callbackValidator = zValidator('query', callbackValidationSchema, (result, c) => {
   if (!result.success) {
-    return c.json({ errorMsg: result.error.flatten().fieldErrors });
+    return c.json({ errorMsg: result.error.flatten().fieldErrors }, 422);
   }
 });
 export type CallbackValidator = ExtractDetails<Parameters<typeof callbackValidator>['0']>;

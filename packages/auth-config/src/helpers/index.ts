@@ -37,12 +37,9 @@ export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
 
     return next();
   } catch (err) {
-    if (err instanceof AxiosError) {
-      console.error('authSessionMiddleware error: ', err.response?.data);
-      return next();
+    if (!(err instanceof AxiosError)) {
+      console.error('authSessionMiddleware error: ', err);
     }
-
-    console.error('authSessionMiddleware error: ', err);
 
     return next();
   }
