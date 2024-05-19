@@ -53,9 +53,11 @@ const App = () => {
       <button
         onClick={async () => {
           const res = await fetch('/comment/create', {
+            headers: {
+              'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify({
-              blogId: 'randomId',
               commentText: 'test text ReportBody',
             }),
           });
@@ -64,6 +66,44 @@ const App = () => {
         }}
       >
         Create comment
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/comment/comments/randomId2');
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        get comment
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/comment/update', {
+            method: 'POST',
+            body: JSON.stringify({
+              commentId: '664a1a9f2ef4791acc9d6a31',
+              commentText: 'updated bara',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        update comment
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/comment/delete', {
+            method: 'DELETE',
+            body: JSON.stringify({
+              commentId: '664a1a9f2ef4791acc9d6a31',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        delete comment
       </button>
     </div>
   );

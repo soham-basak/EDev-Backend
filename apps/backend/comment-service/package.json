@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",
+    "@hono/zod-validator": "^0.2.1",
     "@repo/auth-config": "workspace:*",
     "@repo/util-config": "workspace:*",
     "cors": "^2.8.5",

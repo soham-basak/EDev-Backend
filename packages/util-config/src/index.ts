@@ -1,4 +1,4 @@
 import { globalEnv } from './global-env';
-import { returnError } from './utils';
+import { returnError, handleErrors } from './utils';
 
-export { globalEnv, returnError };
+export { globalEnv, returnError, handleErrors };

@@ -99,6 +99,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.11.1
         version: 1.11.1
+      '@hono/zod-validator':
+        specifier: ^0.2.1
+        version: 0.2.1(hono@4.3.7)(zod@3.23.8)
       '@repo/auth-config':
         specifier: workspace:*
         version: link:../../../packages/auth-config
@@ -293,6 +296,9 @@ importers:
       hono:
         specifier: ^4.3.8
         version: 4.3.8
+      mongoose:
+        specifier: ^8.4.0
+        version: 8.4.0
       typescript:
         specifier: latest
         version: 5.4.5
@@ -1254,6 +1260,16 @@ packages:
       zod: ^3.19.1
     dependencies:
       hono: 4.3.6
+      zod: 3.23.8
+    dev: false
+
+  /@hono/zod-validator@0.2.1(hono@4.3.7)(zod@3.23.8):
+    resolution: {integrity: sha512-HFoxln7Q6JsE64qz2WBS28SD33UB2alp3aRKmcWnNLDzEL1BLsWfbdX6e1HIiUprHYTIXf5y7ax8eYidKUwyaA==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.19.1
+    dependencies:
+      hono: 4.3.7
       zod: 3.23.8
     dev: false
 

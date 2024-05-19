@@ -2,6 +2,7 @@ import { HTTPException } from 'hono/http-exception';
 import { StatusCode } from 'hono/utils/http-status';
 import { z } from 'zod';
 import { DrizzleError } from 'drizzle-orm';
+import { MongooseError } from 'mongoose';
 
 type HandleError = {
   status: StatusCode;
@@ -21,6 +22,12 @@ export const returnError = (error: unknown): HandleError => {
       errorMsg: 'incorrect data passed',
     };
   }
+  if (error instanceof MongooseError) {
+    return {
+      status: 500,
+      errorMsg: 'something went wrong',
+    };
+  }
   if (error instanceof DrizzleError) {
     return {
       status: 500,
@@ -31,4 +38,9 @@ export const returnError = (error: unknown): HandleError => {
     status: 500,
     errorMsg: 'something went wrong',
   };
+};
+
+export const handleErrors = (c: any, error: unknown) => {
+  const { errorMsg, status } = returnError(error);
+  return c.json({ errorMsg }, status);
 };

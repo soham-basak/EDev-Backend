@@ -1,20 +1,19 @@
 import Comment from '../models/comment.model';
-import { z } from 'zod';
 import { Context } from 'hono';
 import { User, Variables } from '@repo/auth-config';
-
+import { CreateCommentValidator } from '../validations/comment.validation';
+import { z } from 'zod';
+import { handleErrors } from '@repo/util-config';
 
 // @desc    Create blog comment
 // route    POST /api/v1/create
 // access   private
-const createComment = async (c: Context<{ Variables: Variables }>) => {
-  const commentSchema = z.object({
-    blogId: z.string(),
-    commentText: z.string(),
-  });
-
+export const createCommentHandler = async (
+  c: Context<{ Variables: Variables }, '', CreateCommentValidator>
+) => {
   try {
-    const { blogId, commentText } = commentSchema.parse(await c.req.json());
+    const { blogId, commentText } = c.req.valid('json');
+
     const user = c.get('user') as User;
 
     const newComment = new Comment({
@@ -26,16 +25,17 @@ const createComment = async (c: Context<{ Variables: Variables }>) => {
 
     const savedComment = await newComment.save();
     return c.json(savedComment, 201);
-  } catch (error: any) {
-    console.error('Server error:', error);
-    return c.json({ message: `Server error: ${error.message}` }, 500);
+  } catch (err) {
+    console.error('createCommentHanlder error: ', err);
+
+    return handleErrors(c, err);
   }
 };
 
 // @desc    Get all comments by blog ID
 // route    GET /api/v1/comments/:blogId
 // access   public
-const getAllComments = async (c: Context<{ Variables: Variables }>) => {
+export const getAllCommentsHandler = async (c: Context<{ Variables: Variables }>) => {
   const paramsSchema = z.object({
     blogId: z.string().nonempty({ message: 'blogId is required and must be a string' }),
   });
@@ -44,7 +44,7 @@ const getAllComments = async (c: Context<{ Variables: Variables }>) => {
     const { blogId } = paramsSchema.parse(c.req.param());
 
     const blogID = blogId;
-    
+
     const comments = await Comment.find({ blogId });
 
     if (comments.length === 0) {
@@ -61,11 +61,10 @@ const getAllComments = async (c: Context<{ Variables: Variables }>) => {
   }
 };
 
-
 // @desc    Update blog comment
 // route    PUT /api/v1/update
 // access   private
-const updateComment = async (c: Context<{ Variables: Variables }>) => {
+export const updateCommentHandler = async (c: Context<{ Variables: Variables }>) => {
   const updateCommentSchema = z.object({
     commentId: z.string(),
     commentText: z.string(),
@@ -83,7 +82,8 @@ const updateComment = async (c: Context<{ Variables: Variables }>) => {
     }
 
     // Check if the user is the owner of the comment
-    if (comment.userID !== user.id) { // userID will be change to -> userId
+    if (comment.userId !== user.id) {
+      // userID will be change to -> userId
       return c.json({ message: 'Unauthorized' }, 401);
     }
 
@@ -101,7 +101,7 @@ const updateComment = async (c: Context<{ Variables: Variables }>) => {
 // @desc    Delete blog comment
 // route    DELETE /api/v1/delete
 // access   private
-const deleteComment = async (c: Context<{ Variables: Variables }>) => {
+export const deleteCommentHandler = async (c: Context<{ Variables: Variables }>) => {
   const deleteCommentSchema = z.object({
     commentId: z.string(),
   });
@@ -118,7 +118,8 @@ const deleteComment = async (c: Context<{ Variables: Variables }>) => {
     }
 
     // Check if the user is the owner of the comment
-    if (comment.userID !== user.id) { // userID will be change to -> userId
+    if (comment.userId !== user.id) {
+      // userID will be change to -> userId
       return c.json({ message: 'Unauthorized' }, 401);
     }
 
@@ -131,8 +132,3 @@ const deleteComment = async (c: Context<{ Variables: Variables }>) => {
     return c.json({ message: `Server error: ${error.message}` }, 500);
   }
 };
-
-
-
-
-export { createComment, getAllComments, updateComment, deleteComment };

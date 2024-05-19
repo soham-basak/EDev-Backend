@@ -50,7 +50,7 @@ export const returnError = (error: unknown): HandleError => {
 // as response.
 export const handleErrors = (c: Context, error: unknown) => {
   const { errorMsg, status } = returnError(error);
-  return c.json(errorMsg, status);
+  return c.json({ errorMsg }, status);
 };
 
 // handleErrors() takes c of type Context by Hono and

@@ -6,8 +6,8 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import auth, { Variables } from '@repo/auth-config';
 
-connectDB();
 const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
+connectDB();
 
 app.use('*', logger());
 

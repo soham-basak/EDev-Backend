@@ -33,5 +33,5 @@ export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET)
 export const google = new Google(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,
-  `http://${globalEnv.CLIENT_DOMAIN}/api/v1/auth/login/callback/google`
+  `${globalEnv.AUTH_SERVICE_URL}/api/v1/auth/login/callback/google`
 );
