@@ -1,4 +1,3 @@
-import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import connectDB from './config/db.config';
 import router from './routes/comment.route';
@@ -6,28 +5,33 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import auth, { Variables } from '@repo/auth-config';
 
-const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
-connectDB();
+const createServer = () => {
+  connectDB();
+  const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
 
-app.use('*', logger());
+  app.use('*', logger());
 
-app.use(
-  '*',
-  cors({
-    origin: '*',
-    allowMethods: ['GET', 'POST', 'DELETE'],
+  app.use(
+    '*',
+    cors({
+      origin: '*',
+      allowMethods: ['GET', 'POST', 'DELETE'],
+    })
+  );
+
+
+  app.use('*', auth.sessionMiddleware);
+
+  app.get('/comment-service', (c) => {
+    return c.text('OK', 200);
   })
-);
 
-app.use('*', auth.sessionMiddleware);
+  app.route('/', router);
 
-app.route('/', router);
+  return app;
 
-const port = 8787;
+}
 
-serve({
-  fetch: app.fetch,
-  port,
-});
+export default createServer;
 
-console.log(`Server is running on port ${port}`);
+
