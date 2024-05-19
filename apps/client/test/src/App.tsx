@@ -49,6 +49,22 @@ const App = () => {
       >
         get session
       </button>
+
+      <button
+        onClick={async () => {
+          const res = await fetch('http://localhost:8787/api/v1/create', {
+            method: 'POST',
+            body: JSON.stringify({
+              blogId: 'test',
+              commentText: 'test text ReportBody',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        Create comment
+      </button>
     </div>
   );
 };

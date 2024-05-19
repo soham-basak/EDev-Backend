@@ -1,21 +1,34 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import authHeleprs, { Variables } from '@repo/auth-config';
+import connectDB from './config/db.config';
+import router from './routes/comment.route';
+import { logger } from 'hono/logger';
+import { prettyJSON } from 'hono/pretty-json';
+import { cors } from 'hono/cors';
 
-const app = new Hono<{ Variables: Variables }>();
 
-app.use('*', authHeleprs.authSessionMiddleware);
+connectDB();
+const app = new Hono().basePath('/api/v1');
 
-app.get('/', (c) => {
-  const user = c.get('user');
 
-  return c.json(user);
-});
+app.use('*', logger(), prettyJSON())
+app.use(
+  '*',
+  cors({
+    origin: '*',
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  })
+)
 
-const port = 5000;
-console.log(`Server is running on port ${port}`);
+
+app.route('/', router)
+
+const port = 8787;
+
 
 serve({
   fetch: app.fetch,
   port,
 });
+
+console.log(`Server is running on port ${port}`);
