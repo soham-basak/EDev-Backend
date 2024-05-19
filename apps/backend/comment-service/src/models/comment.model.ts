@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { IComment } from "../../types";
+import mongoose, { Schema } from 'mongoose';
+import { IComment } from '../../types';
 
 const commentSchema: Schema = new Schema({
-  blogID: {
+  blogId: {
     type: String,
     required: true,
   },
@@ -10,7 +10,7 @@ const commentSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  userID: {
+  userId: {
     type: String,
     required: true,
   },
@@ -25,5 +25,5 @@ const commentSchema: Schema = new Schema({
   },
 });
 
-const Comment = mongoose.model<IComment>("Comment", commentSchema);
+const Comment = mongoose.model<IComment>('Comment', commentSchema);
 export default Comment;

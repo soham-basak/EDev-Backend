@@ -1,4 +1,3 @@
-import { NeonDbError, DatabaseError } from '@neondatabase/serverless';
 import { OAuth2RequestError } from 'arctic';
 import { DrizzleError } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
@@ -31,18 +30,6 @@ export const returnError = (error: unknown): HandleError => {
     };
   }
   if (error instanceof DrizzleError) {
-    return {
-      status: 500,
-      errorMsg: 'something went wrong',
-    };
-  }
-  if (error instanceof NeonDbError) {
-    return {
-      status: 500,
-      errorMsg: 'something went wrong',
-    };
-  }
-  if (error instanceof DatabaseError) {
     return {
       status: 500,
       errorMsg: 'something went wrong',

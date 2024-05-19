@@ -52,10 +52,10 @@ const App = () => {
 
       <button
         onClick={async () => {
-          const res = await fetch('http://localhost:8787/api/v1/create', {
+          const res = await fetch('/comment/create', {
             method: 'POST',
             body: JSON.stringify({
-              blogId: 'test',
+              blogId: 'randomId',
               commentText: 'test text ReportBody',
             }),
           });

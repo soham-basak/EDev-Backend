@@ -14,7 +14,7 @@ export type User = {
   createdAt: Date;
 };
 
-export const authSessionMiddleware: MiddlewareHandler = async (c, next) => {
+export const sessionMiddleware: MiddlewareHandler = async (c, next) => {
   try {
     const { data, status } = await axios.get<User | null>(
       'http://localhost:3000/api/v1/auth/user',

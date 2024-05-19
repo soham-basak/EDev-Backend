@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.3.8",
     "typescript": "latest",
     "zod": "^3.23.8"
   },

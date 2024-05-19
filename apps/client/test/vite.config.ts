@@ -10,7 +10,12 @@ export default defineConfig({
         target: 'http://localhost:3000/api/v1',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-      }
+      },
+      '/comment': {
+        target: 'http://localhost:8787/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/comment/, ''),
+      },
     },
   },
 });
