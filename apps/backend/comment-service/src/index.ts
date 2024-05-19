@@ -19,19 +19,15 @@ const createServer = () => {
     })
   );
 
-
   app.use('*', auth.sessionMiddleware);
 
   app.get('/comment-service', (c) => {
     return c.text('OK', 200);
-  })
+  });
 
   app.route('/', router);
 
   return app;
-
-}
+};
 
 export default createServer;
-
-
