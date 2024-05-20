@@ -1,14 +1,12 @@
 import { HTTPException } from 'hono/http-exception';
 import { StatusCode } from 'hono/utils/http-status';
-import { z } from 'zod';
-import { DrizzleError } from 'drizzle-orm';
 import { MongooseError } from 'mongoose';
+import { z } from 'zod';
 
 type HandleError = {
   status: StatusCode;
   errorMsg: string;
 };
-
 export const returnError = (error: unknown): HandleError => {
   if (error instanceof HTTPException) {
     return {
@@ -26,12 +24,6 @@ export const returnError = (error: unknown): HandleError => {
     return {
       status: 500,
       errorMsg: error.message,
-    };
-  }
-  if (error instanceof DrizzleError) {
-    return {
-      status: 500,
-      errorMsg: 'something went wrong',
     };
   }
   return {

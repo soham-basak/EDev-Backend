@@ -58,6 +58,7 @@ const App = () => {
             },
             method: 'POST',
             body: JSON.stringify({
+              blogId: 'baler blog',
               commentText: 'test text ReportBody',
             }),
           });
@@ -69,7 +70,7 @@ const App = () => {
       </button>
       <button
         onClick={async () => {
-          const res = await fetch('/comment/comments/randomId2');
+          const res = await fetch('/comment/comments/baler blog');
           const data = await res.json();
           console.log(data);
         }}
@@ -81,7 +82,7 @@ const App = () => {
           const res = await fetch('/comment/update', {
             method: 'POST',
             body: JSON.stringify({
-              commentId: '664a1a9f2ef4791acc9d6a31',
+              commentId: '664b9d03ea18659fe668400c',
               commentText: 'updated bara',
             }),
           });
@@ -96,7 +97,7 @@ const App = () => {
           const res = await fetch('/comment/delete', {
             method: 'DELETE',
             body: JSON.stringify({
-              commentId: '664a1a9f2ef4791acc9d6a31',
+              commentId: '664b9d03ea18659fe668400c',
             }),
           });
           const data = await res.json();

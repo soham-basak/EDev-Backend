@@ -3,7 +3,7 @@ import { Context } from 'hono';
 import { User, Variables } from '@repo/auth-config';
 import { CreateCommentValidator } from '../validations/comment.validation';
 import { z } from 'zod';
-import { handleErrors } from '@repo/util-config';
+import { handleErrors } from '../utils/index';
 import { HTTPException } from 'hono/http-exception';
 
 // @desc    Create blog comment
@@ -46,7 +46,7 @@ export const getAllCommentsHandler = async (c: Context<{ Variables: Variables }>
 
     const comments = await Comment.find({ blogId });
 
-    if (comments.length === 0) {
+    if (comments?.length === 0) {
       throw new HTTPException(404, {
         message: 'No comments found for this blog.',
       });
