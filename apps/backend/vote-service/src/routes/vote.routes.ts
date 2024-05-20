@@ -7,6 +7,6 @@ const router = new Hono();
 router.post('/upvote', upvote);
 router.post('/downvote', downvote);
 router.get('/votes/:blogId', getAllVotes);
-router.post('/removeVote', removeVote);
+router.post('/removevote', removeVote);
 
 export default router;

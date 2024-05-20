@@ -4,6 +4,7 @@ import { User, Variables } from '@repo/auth-config';
 import { CreateCommentValidator } from '../validations/comment.validation';
 import { z } from 'zod';
 import { handleErrors } from '@repo/util-config';
+import { HTTPException } from 'hono/http-exception';
 
 // @desc    Create blog comment
 // route    POST /api/v1/create
@@ -37,27 +38,25 @@ export const createCommentHandler = async (
 // access   public
 export const getAllCommentsHandler = async (c: Context<{ Variables: Variables }>) => {
   const paramsSchema = z.object({
-    blogId: z.string().nonempty({ message: 'blogId is required and must be a string' }),
+    blogId: z.string().min(2, { message: 'blogId is required and must be a string' }),
   });
 
   try {
     const { blogId } = paramsSchema.parse(c.req.param());
 
-    const blogID = blogId;
-
     const comments = await Comment.find({ blogId });
 
     if (comments.length === 0) {
-      return c.json({ message: 'No comments found for this blog.' }, 404);
+      throw new HTTPException(404, {
+        message: 'No comments found for this blog.',
+      });
     }
 
     return c.json(comments, 200);
-  } catch (error: any) {
-    console.error('Validation or server error:', error);
-    if (error instanceof z.ZodError) {
-      return c.json({ errors: error.errors }, 400);
-    }
-    return c.json({ message: `Server error: ${error.message}` }, 500);
+  } catch (error) {
+    console.error('getAllCommentsHandler error: ', error);
+
+    return handleErrors(c, error);
   }
 };
 
@@ -78,7 +77,9 @@ export const updateCommentHandler = async (c: Context<{ Variables: Variables }>)
     const comment = await Comment.findById(commentId);
 
     if (!comment) {
-      return c.json({ message: 'Comment not found' }, 404);
+      throw new HTTPException(404, {
+        message: 'No comment found',
+      });
     }
 
     // Check if the user is the owner of the comment
@@ -92,9 +93,10 @@ export const updateCommentHandler = async (c: Context<{ Variables: Variables }>)
     const updatedComment = await comment.save();
 
     return c.json(updatedComment, 200);
-  } catch (error: any) {
-    console.error('Server error:', error);
-    return c.json({ message: `Server error: ${error.message}` }, 500);
+  } catch (error) {
+    console.error('updateCommentHandler error:', error);
+
+    return handleErrors(c, error);
   }
 };
 
@@ -114,21 +116,26 @@ export const deleteCommentHandler = async (c: Context<{ Variables: Variables }>)
     const comment = await Comment.findById(commentId);
 
     if (!comment) {
-      return c.json({ message: 'Comment not found' }, 404);
+      throw new HTTPException(404, {
+        message: 'No comment found',
+      });
     }
 
     // Check if the user is the owner of the comment
     if (comment.userId !== user.id) {
       // userID will be change to -> userId
-      return c.json({ message: 'Unauthorized' }, 401);
+      throw new HTTPException(401, {
+        message: 'Unauthorized',
+      });
     }
 
     // Delete the comment
     await Comment.findByIdAndDelete(commentId);
 
     return c.json({ message: 'Comment deleted successfully' }, 200);
-  } catch (error: any) {
-    console.error('Server error:', error);
-    return c.json({ message: `Server error: ${error.message}` }, 500);
+  } catch (error) {
+    console.error('deleteCommentHandler error:', error);
+
+    return handleErrors(c, error);
   }
 };

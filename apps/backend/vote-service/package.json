@@ -6,6 +6,7 @@
   "dependencies": {
     "@hono/node-server": "^1.11.1",
     "@repo/auth-config": "workspace:*",
+    "@repo/util-config": "workspace:^",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "hono": "^4.3.7",

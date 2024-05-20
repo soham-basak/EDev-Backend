@@ -14,6 +14,7 @@ export type User = {
   createdAt: Date;
 };
 
+// Context is typed as any to avoid conflict between multiple Hono instances.
 export const sessionMiddleware = async (c: any, next: Next) => {
   try {
     const { data, status } = await axios.get<User | null>(
@@ -44,6 +45,7 @@ export const sessionMiddleware = async (c: any, next: Next) => {
   }
 };
 
+// Context is typed as any to avoid conflict between multiple Hono instances.
 export const withAuthMiddleware = async (c: any, next: Next) => {
   const user = c.get('user') as User | null;
 
