@@ -9,7 +9,6 @@ import { HTTPException } from 'hono/http-exception';
 export const upvote = async (c: Context<{ Variables: Variables }>) => {
   const upvoteSchema = z.object({
     blogId: z.string(),
-    userId: z.string(),
   });
   try {
     const { blogId } = upvoteSchema.parse(await c.req.json());

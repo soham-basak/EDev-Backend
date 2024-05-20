@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
 
 export interface IComment extends Document {
-  blogID: string;
+  blogId: string;
   userName: string;
-  userID: string;
+  userId: string;
   commentText: string;
   createdAt: Date;
 }

@@ -105,6 +105,58 @@ const App = () => {
       >
         delete comment
       </button>
+      {/* vote */}
+      <button
+        onClick={async () => {
+          const res = await fetch('/vote/upvote', {
+            method: 'POST',
+            body: JSON.stringify({
+              blogId: 'baler blog',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        upvote
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/vote/downvote', {
+            method: 'POST',
+            body: JSON.stringify({
+              blogId: 'baler blog',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        downvote
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/vote/votes/baler blog');
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        get votes
+      </button>
+      <button
+        onClick={async () => {
+          const res = await fetch('/vote/removevote', {
+            method: 'POST',
+            body: JSON.stringify({
+              blogId: 'baler blog',
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+        }}
+      >
+        removevote
+      </button>
     </div>
   );
 };

@@ -16,6 +16,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/comment/, ''),
       },
+      '/vote': {
+        target: 'http://localhost:8550/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/vote/, ''),
+      },
     },
   },
 });
