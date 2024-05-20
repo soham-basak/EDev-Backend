@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
 
 import { upvote, downvote, getAllVotes, removeVote } from '../handlers/vote.handler';
+import { Variables } from '@repo/auth-config';
 
-const router = new Hono();
+const router = new Hono<{ Variables: Variables }>();
 
 router.post('/upvote', upvote);
 router.post('/downvote', downvote);

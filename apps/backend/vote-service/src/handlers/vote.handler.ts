@@ -1,17 +1,20 @@
 import { handleErrors } from '@repo/util-config';
-import { Vote } from '../models/vote.model';
 import { Context } from 'hono';
+import { User, Variables } from '@repo/auth-config';
+import { Vote } from '../models/vote.model';
 import { z } from 'zod';
 import { HTTPException } from 'hono/http-exception';
 
 // Upvote handler
-export const upvote = async (c: Context) => {
+export const upvote = async (c: Context<{ Variables: Variables }>) => {
   const upvoteSchema = z.object({
     blogId: z.string(),
     userId: z.string(),
   });
   try {
-    const { blogId, userId } = upvoteSchema.parse(await c.req.json());
+    const { blogId } = upvoteSchema.parse(await c.req.json());
+    const user = c.get('user') as User;
+    const userId = user.id;
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
@@ -47,7 +50,9 @@ export const upvote = async (c: Context) => {
 // Downvote handler
 export const downvote = async (c: Context) => {
   try {
-    const { blogId, userId } = await c.req.json();
+    const { blogId } = await c.req.json();
+    const user = c.get('user') as User;
+    const userId = user.id;
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
@@ -100,7 +105,9 @@ export const getAllVotes = async (c: Context) => {
 
 export const removeVote = async (c: Context) => {
   try {
-    const { blogId, userId } = await c.req.json();
+    const { blogId } = await c.req.json();
+    const user = c.get('user') as User;
+    const userId = user.id;
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
