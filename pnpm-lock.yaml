@@ -131,7 +131,7 @@ importers:
         specifier: ^4.7.1
         version: 4.10.2
 
-  apps/backend/vote-service:
+  apps/backend/vote-servic:
     dependencies:
       '@hono/node-server':
         specifier: ^1.11.1
@@ -154,6 +154,25 @@ importers:
       zod:
         specifier: ^3.23.8
         version: 3.23.8
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.17
+        version: 20.12.12
+      tsx:
+        specifier: ^4.7.1
+        version: 4.10.2
+
+  apps/backend/vote-service:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^1.11.1
+        version: 1.11.1
+      '@repo/auth-config':
+        specifier: workspace:*
+        version: link:../../../packages/auth-config
+      hono:
+        specifier: ^4.3.8
+        version: 4.3.8
     devDependencies:
       '@types/node':
         specifier: ^20.11.17

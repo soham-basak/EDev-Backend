@@ -1,4 +1,4 @@
-import { MiddlewareHandler } from 'hono';
+import { Context, Env, MiddlewareHandler, Next } from 'hono';
 import axios, { AxiosError } from 'axios';
 
 export type Variables = {
@@ -14,7 +14,7 @@ export type User = {
   createdAt: Date;
 };
 
-export const sessionMiddleware: MiddlewareHandler = async (c, next) => {
+export const sessionMiddleware = async (c: any, next: Next) => {
   try {
     const { data, status } = await axios.get<User | null>(
       'http://localhost:3000/api/v1/auth/user',
@@ -44,10 +44,8 @@ export const sessionMiddleware: MiddlewareHandler = async (c, next) => {
   }
 };
 
-export const withAuthMiddleware: MiddlewareHandler<{
-  Variables: Variables;
-}> = async (c, next) => {
-  const user = c.get('user');
+export const withAuthMiddleware = async (c: any, next: Next) => {
+  const user = c.get('user') as User | null;
 
   if (!user?.id) {
     return c.json(
