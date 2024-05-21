@@ -7,7 +7,7 @@ import {
   logoutHandler,
   getUserSessionHandler,
 } from '../handlers/auth.handler';
-import { callbackValidator } from '../lib/validations/auth.validations';
+import { callbackValidator } from '../lib/validations/auth.validation';
 import { withAuthMiddleware, withoutAuthMiddleware } from '../middlewares/auth.middleware';
 
 export const authRoutes = new Hono();

@@ -15,7 +15,7 @@ export type User = {
 };
 
 // Context is typed as any to avoid conflict between multiple Hono instances.
-export const sessionMiddleware = async (c: any, next: Next) => {
+export const sessionMiddleware = async (c: Context, next: Next) => {
   try {
     const { data, status } = await axios.get<User | null>(
       'http://localhost:3000/api/v1/auth/user',
@@ -46,7 +46,7 @@ export const sessionMiddleware = async (c: any, next: Next) => {
 };
 
 // Context is typed as any to avoid conflict between multiple Hono instances.
-export const withAuthMiddleware = async (c: any, next: Next) => {
+export const withAuthMiddleware = async (c: Context, next: Next) => {
   const user = c.get('user') as User | null;
 
   if (!user?.id) {

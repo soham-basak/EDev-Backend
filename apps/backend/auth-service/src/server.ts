@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { csrf } from 'hono/csrf';
 import { cors } from 'hono/cors';
-import { authRoutes } from './routes/auth.routes';
+import { authRoutes } from './routes/auth.route';
 import { sessionMiddleware } from './middlewares/auth.middleware';
 import { globalEnv } from '@repo/util-config';
 import { Variables } from '../types';

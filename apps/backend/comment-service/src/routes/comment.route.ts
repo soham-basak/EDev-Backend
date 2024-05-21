@@ -5,14 +5,19 @@ import {
   getAllCommentsHandler,
   updateCommentHandler,
 } from '../handler/comment.handler';
-import { createCommentValidator } from '../validations/comment.validation';
+import {
+  createCommentValidator,
+  deleteCommentValidator,
+  getAllCommentsValidator,
+  updateCommentValidator,
+} from '../validations/comment.validation';
 import auth, { Variables } from '@repo/auth-config';
 
 const router = new Hono<{ Variables: Variables }>();
 
 router.post('/create', auth.withAuthMiddleware, createCommentValidator, createCommentHandler);
-router.get('/comments/:blogId', getAllCommentsHandler);
-router.post('/update', auth.withAuthMiddleware, updateCommentHandler);
-router.delete('/delete', auth.withAuthMiddleware, deleteCommentHandler);
+router.get('/comments/:blogId', getAllCommentsValidator, getAllCommentsHandler);
+router.post('/update', auth.withAuthMiddleware, updateCommentValidator, updateCommentHandler);
+router.delete('/delete', auth.withAuthMiddleware, deleteCommentValidator, deleteCommentHandler);
 
 export default router;

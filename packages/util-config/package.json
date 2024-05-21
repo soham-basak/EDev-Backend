@@ -5,15 +5,14 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
-    "hono": "^4.3.8",
+    "hono": "^4.3.9",
     "mongoose": "^8.4.0",
     "typescript": "latest",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
+    "zod": "^3.23.8",
     "@types/node": "^20.12.12"
   }
 }

@@ -1,9 +1,13 @@
 import Comment from '../models/comment.model';
 import { Context } from 'hono';
 import { User, Variables } from '@repo/auth-config';
-import { CreateCommentValidator } from '../validations/comment.validation';
-import { z } from 'zod';
-import { handleErrors } from '../utils/index';
+import { handleErrors } from '@repo/util-config';
+import {
+  CreateCommentValidator,
+  DeleteCommentValidator,
+  GetAllCommentsValidator,
+  UpdateCommentValidator,
+} from '../validations/comment.validation';
 import { HTTPException } from 'hono/http-exception';
 
 // @desc    Create blog comment
@@ -24,8 +28,9 @@ export const createCommentHandler = async (
       commentText,
     });
 
-    const savedComment = await newComment.save();
-    return c.json(savedComment, 201);
+    await newComment.save();
+
+    return c.json('comment created', 201);
   } catch (err) {
     console.error('createCommentHanlder error: ', err);
 
@@ -36,14 +41,11 @@ export const createCommentHandler = async (
 // @desc    Get all comments by blog ID
 // route    GET /api/v1/comments/:blogId
 // access   public
-export const getAllCommentsHandler = async (c: Context<{ Variables: Variables }>) => {
-  const paramsSchema = z.object({
-    blogId: z.string().min(2, { message: 'blogId is required and must be a string' }),
-  });
-
+export const getAllCommentsHandler = async (
+  c: Context<{ Variables: Variables }, '', GetAllCommentsValidator>
+) => {
   try {
-    const { blogId } = paramsSchema.parse(c.req.param());
-
+    const { blogId } = c.req.valid('param');
     const comments = await Comment.find({ blogId });
 
     if (comments?.length === 0) {
@@ -63,14 +65,11 @@ export const getAllCommentsHandler = async (c: Context<{ Variables: Variables }>
 // @desc    Update blog comment
 // route    PUT /api/v1/update
 // access   private
-export const updateCommentHandler = async (c: Context<{ Variables: Variables }>) => {
-  const updateCommentSchema = z.object({
-    commentId: z.string(),
-    commentText: z.string(),
-  });
-
+export const updateCommentHandler = async (
+  c: Context<{ Variables: Variables }, '', UpdateCommentValidator>
+) => {
   try {
-    const { commentId, commentText } = updateCommentSchema.parse(await c.req.json());
+    const { commentId, commentText } = c.req.valid('json');
     const user = c.get('user') as User;
 
     // Find the comment by its ID
@@ -84,15 +83,16 @@ export const updateCommentHandler = async (c: Context<{ Variables: Variables }>)
 
     // Check if the user is the owner of the comment
     if (comment.userId !== user.id) {
-      // userID will be change to -> userId
-      return c.json({ message: 'Unauthorized' }, 401);
+      throw new HTTPException(401, {
+        message: 'Unauthorized',
+      });
     }
 
     // Update the comment text
     comment.commentText = commentText;
-    const updatedComment = await comment.save();
+    await comment.save();
 
-    return c.json(updatedComment, 200);
+    return c.json('comment updated', 200);
   } catch (error) {
     console.error('updateCommentHandler error:', error);
 
@@ -103,13 +103,11 @@ export const updateCommentHandler = async (c: Context<{ Variables: Variables }>)
 // @desc    Delete blog comment
 // route    DELETE /api/v1/delete
 // access   private
-export const deleteCommentHandler = async (c: Context<{ Variables: Variables }>) => {
-  const deleteCommentSchema = z.object({
-    commentId: z.string(),
-  });
-
+export const deleteCommentHandler = async (
+  c: Context<{ Variables: Variables }, '', DeleteCommentValidator>
+) => {
   try {
-    const { commentId } = deleteCommentSchema.parse(await c.req.json());
+    const { commentId } = c.req.valid('json');
     const user = c.get('user') as User;
 
     // Find the comment by its ID
@@ -123,7 +121,6 @@ export const deleteCommentHandler = async (c: Context<{ Variables: Variables }>)
 
     // Check if the user is the owner of the comment
     if (comment.userId !== user.id) {
-      // userID will be change to -> userId
       throw new HTTPException(401, {
         message: 'Unauthorized',
       });
@@ -132,7 +129,7 @@ export const deleteCommentHandler = async (c: Context<{ Variables: Variables }>)
     // Delete the comment
     await Comment.findByIdAndDelete(commentId);
 
-    return c.json({ message: 'Comment deleted successfully' }, 200);
+    return c.json('comment deleted', 200);
   } catch (error) {
     console.error('deleteCommentHandler error:', error);
 

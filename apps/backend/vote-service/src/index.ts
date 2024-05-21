@@ -1,33 +1,22 @@
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
 import { env } from './validations/env';
-import connectDB from './config/db.config';
-import router from './routes/vote.routes';
-import auth, { Variables } from '@repo/auth-config';
-import { logger } from 'hono/logger';
-import { cors } from 'hono/cors';
-import { globalEnv } from '@repo/util-config';
+import createServer from './server';
 
-const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
-connectDB();
+async function server() {
+  const server = createServer();
+  const PORT = Number(env.PORT);
 
-app.use('*', logger());
+  try {
+    serve({
+      fetch: server.fetch,
+      port: PORT,
+    });
 
-app.use(
-  '*',
-  cors({
-    origin: [globalEnv.CLIENT_DOMAIN],
-    allowMethods: ['GET', 'POST', 'DELETE'],
-  })
-);
+    console.log('vote service started at port:', PORT);
+  } catch (err) {
+    console.error('vote service shutting down', err);
+    process.exit(1);
+  }
+}
 
-app.use('*', auth.sessionMiddleware);
-app.route('/', router);
-
-const port = Number(env.PORT);
-console.log(`vote-service is running on port ${port}`);
-
-serve({
-  fetch: app.fetch,
-  port,
-});
+server();

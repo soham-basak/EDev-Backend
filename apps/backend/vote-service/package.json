@@ -5,11 +5,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",
+    "@hono/zod-validator": "^0.2.1",
     "@repo/auth-config": "workspace:*",
-    "@repo/util-config": "workspace:^",
-    "cors": "^2.8.5",
+    "@repo/util-config": "workspace:*",
     "dotenv": "^16.4.5",
-    "hono": "^4.3.7",
+    "hono": "^4.3.9",
     "mongoose": "^8.4.0",
     "zod": "^3.23.8"
   },

@@ -2,18 +2,18 @@ import { handleErrors } from '@repo/util-config';
 import { Context } from 'hono';
 import { User, Variables } from '@repo/auth-config';
 import { Vote } from '../models/vote.model';
-import { z } from 'zod';
 import { HTTPException } from 'hono/http-exception';
+import { type VoteJSONValidator, type VoteParamValidator } from '../validations/vote.validation';
 
 // Upvote handler
-export const upvote = async (c: Context<{ Variables: Variables }>) => {
-  const upvoteSchema = z.object({
-    blogId: z.string(),
-  });
+export const upvoteHandler = async (
+  c: Context<{ Variables: Variables }, '', VoteJSONValidator>
+) => {
   try {
-    const { blogId } = upvoteSchema.parse(await c.req.json());
+    const { blogId } = c.req.valid('json');
     const user = c.get('user') as User;
     const userId = user.id;
+
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
@@ -38,7 +38,7 @@ export const upvote = async (c: Context<{ Variables: Variables }>) => {
     voteDoc.updateVoteCount();
     await voteDoc.save();
 
-    return c.json({ message: 'Upvoted successfully.' });
+    return c.json('upvoted', 200);
   } catch (err) {
     console.error('upvoteHandler error: ', err);
 
@@ -47,11 +47,14 @@ export const upvote = async (c: Context<{ Variables: Variables }>) => {
 };
 
 // Downvote handler
-export const downvote = async (c: Context) => {
+export const downvoteHandler = async (
+  c: Context<{ Variables: Variables }, '', VoteJSONValidator>
+) => {
   try {
-    const { blogId } = await c.req.json();
+    const { blogId } = c.req.valid('json');
     const user = c.get('user') as User;
     const userId = user.id;
+
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
@@ -76,7 +79,7 @@ export const downvote = async (c: Context) => {
     voteDoc.updateVoteCount();
     await voteDoc.save();
 
-    return c.json({ message: 'Downvoted successfully.' });
+    return c.json('downvoted', 200);
   } catch (err) {
     console.error('downvoteHandler error: ', err);
 
@@ -85,45 +88,58 @@ export const downvote = async (c: Context) => {
 };
 
 // Get all votes by blogId handler
-export const getAllVotes = async (c: Context) => {
+export const getAllVotesHandler = async (
+  c: Context<{ Variables: Variables }, '', VoteParamValidator>
+) => {
   try {
-    const { blogId } = c.req.param();
+    const { blogId } = c.req.valid('param');
+
     const voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
-      return c.json({ votes: [], voteCount: 0 });
+      throw new HTTPException(404, {
+        message: 'no votes with this blogId found.',
+      });
     }
 
     return c.json({ votes: voteDoc.votes, voteCount: voteDoc.voteCount });
   } catch (err) {
-    console.error('getAllVotes error: ', err);
+    console.error('getAllVotesHandler error: ', err);
 
     return handleErrors(c, err);
   }
 };
 
-export const removeVote = async (c: Context) => {
+// remove vote by blogId handler
+export const removeVoteHandler = async (
+  c: Context<{ Variables: Variables }, '', VoteJSONValidator>
+) => {
   try {
-    const { blogId } = await c.req.json();
+    const { blogId } = c.req.valid('json');
     const user = c.get('user') as User;
     const userId = user.id;
+
     let voteDoc = await Vote.findOne({ blogId });
 
     if (!voteDoc) {
-      return c.json({ message: 'Vote document not found.' }, 404);
+      throw new HTTPException(404, {
+        message: 'user vote not found.',
+      });
     }
 
     const userVoteIndex = voteDoc.votes.findIndex((v) => v.userId === userId);
 
     if (userVoteIndex === -1) {
-      return c.json({ message: 'User vote not found.' }, 404);
+      throw new HTTPException(404, {
+        message: 'user vote not found.',
+      });
     }
 
     voteDoc.votes.splice(userVoteIndex, 1); // Remove the user's vote
     voteDoc.updateVoteCount();
     await voteDoc.save();
 
-    return c.json({ message: 'Vote removed successfully.' });
+    return c.json('vote removed', 200);
   } catch (err) {
     console.error('removeVoteHandler error: ', err);
 

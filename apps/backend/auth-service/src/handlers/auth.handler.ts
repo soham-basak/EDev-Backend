@@ -18,7 +18,7 @@ import {
   CallbackValidator,
   githubUserValidationSchema,
   googleUserValidationSchema,
-} from '../lib/validations/auth.validations';
+} from '../lib/validations/auth.validation';
 import { globalEnv } from '@repo/util-config';
 import { lucia } from '../auth';
 import { Variables } from '../../types';

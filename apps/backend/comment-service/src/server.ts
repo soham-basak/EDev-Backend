@@ -1,22 +1,41 @@
-import { serve } from "@hono/node-server";
-import createServer from "./index";
-import { env } from "./validations/env";
+import { Hono } from 'hono';
+import connectDB from './config/db.config';
+import router from './routes/comment.route';
+import { logger } from 'hono/logger';
+import { cors } from 'hono/cors';
+import auth, { Variables } from '@repo/auth-config';
+import { globalEnv } from '@repo/util-config';
 
-async function server() {
-    const server = createServer();
-    const PORT = Number(env.PORT || 8787);
+const createServer = () => {
+  const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
 
-    try{
-        serve({
-            fetch: server.fetch,
-            port: PORT,
-        });
+  // Connecting to DB
+  connectDB();
 
-        console.log('comment service started at port:', PORT);
-    } catch(err) {
-        console.error('comment service shutting down', err);
-        process.exit(1);
-    }
-}
+  // Middlewares
+  app.use('*', logger());
 
-server();
+  app.use(
+    '*',
+    cors({
+      origin: [globalEnv.CLIENT_DOMAIN],
+      allowMethods: ['GET', 'POST', 'DELETE'],
+    })
+  );
+
+  // If this shows a type error for context
+  // make sure to keep the same Hono version
+  // as the packages.
+  app.use('*', auth.sessionMiddleware);
+
+  app.get('/healthcheck', (c) => {
+    return c.text('OK', 200);
+  });
+
+  // Routes
+  app.route('/', router);
+
+  return app;
+};
+
+export default createServer;

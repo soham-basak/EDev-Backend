@@ -5,9 +5,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "dependencies": {
+  "devDependencies": {
     "axios": "^1.6.8",
-    "hono": "^4.3.7",
+    "hono": "^4.3.9",
     "typescript": "latest"
   }
 }

@@ -3,6 +3,9 @@ import { StatusCode } from 'hono/utils/http-status';
 import { z } from 'zod';
 import { DrizzleError } from 'drizzle-orm';
 import { MongooseError } from 'mongoose';
+import { Context } from 'hono';
+
+export type ExtractDetails<T> = T extends Context<any, any, infer U> ? U : never;
 
 type HandleError = {
   status: StatusCode;
@@ -40,7 +43,7 @@ export const returnError = (error: unknown): HandleError => {
   };
 };
 
-export const handleErrors = (c: any, error: unknown) => {
+export const handleErrors = (c: Context, error: unknown) => {
   const { errorMsg, status } = returnError(error);
   return c.json({ errorMsg }, status);
 };
