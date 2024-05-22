@@ -82,5 +82,5 @@ export const withoutAuthMiddleware: MiddlewareHandler<{
     return next();
   }
 
-  return c.redirect(globalEnv.CLIENT_DOMAIN, 302);
+  return c.json({ errorMsg: 'already logged in.' }, 401);
 };
