@@ -7,7 +7,9 @@ import * as schema from './schema';
 // Creates a Pool of database connections.
 const sql = new pg.Pool({ connectionString: env.DB_URL });
 
-await sql.connect();
+sql.connect().catch((err) => {
+  console.error('db connection error: ', err);
+});
 
 // Instance of Drizzle which allows to interact
 // with the database in a type-safe manner.
