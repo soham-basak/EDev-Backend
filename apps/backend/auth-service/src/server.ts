@@ -28,8 +28,9 @@ const createServer = () => {
   app.use(
     '*',
     cors({
-      origin: [globalEnv.AUTH_SERVICE_URL, globalEnv.COMMENT_SERVICE_URL, globalEnv.CLIENT_DOMAIN],
+      origin: [globalEnv.CLIENT_DOMAIN],
       allowMethods: ['GET', 'POST'],
+      credentials: true,
     })
   );
 

@@ -18,6 +18,7 @@ const createServer = () => {
     cors({
       origin: [globalEnv.CLIENT_DOMAIN],
       allowMethods: ['GET', 'POST', 'DELETE'],
+      credentials: true,
     })
   );
 
