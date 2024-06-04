@@ -5,6 +5,10 @@
     "build": "turbo build",
     "dev": "turbo dev --parallel",
     "start": "turbo start --parallel",
+    "docker:up": "sudo chmod +x ./scripts/docker-compose-up.sh && ./scripts/docker-compose-up.sh",
+    "docker:build": "sudo docker build . -t",
+    "docker:tag": "sudo docker tag",
+    "docker:push": "sudo docker push",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md}\""
   },
