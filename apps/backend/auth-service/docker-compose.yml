@@ -1,19 +1,51 @@
 version: '3.9'
 
 services:
-  db:
+  auth_service_db:
     container_name: auth_service_db
     image: postgres:latest
     ports:
       - '5432:5432'
+    networks:
+      - web
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - PGDATA=/var/lib/postgresql/data
-    restart: unless-stopped
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - auth-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+      args:
+        service_name: auth-service
+    image: auth-service:1.0.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '3000:3000'
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.auth-service.entrypoints=websecure
+      - traefik.http.routers.auth-service.rule=Host($AUTH_SERVICE_HOST)
+      - traefik.http.routers.auth-service.tls.certresolver=cloudflare
+      - traefik.http.services.auth-service.loadbalancer.server.port=${PORT}
+    depends_on:
+      - auth_service_db
+    env_file:
+      - ./.env
+      - ../../../.env
+    restart: unless-stopped
 
 volumes:
-  db-data:
+  auth-data:
+
+networks:
+  web:
+    external: true

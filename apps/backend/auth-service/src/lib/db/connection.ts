@@ -5,7 +5,13 @@ import { env } from '../validations/env';
 import * as schema from './schema';
 
 // Creates a Pool of database connections.
-const sql = new pg.Pool({ connectionString: env.DB_URL });
+const sql = new pg.Pool({
+  user: env.POSTGRES_USER,
+  password: env.POSTGRES_PASSWORD,
+  database: env.POSTGRES_DB,
+  port: 5432,
+  host: env.POSTGRES_HOST ?? 'localhost',
+});
 
 sql.connect().catch((err) => {
   console.error('db connection error: ', err);

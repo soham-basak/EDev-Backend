@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  vote-service:
+    container_name: vote-service
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+      args:
+        service_name: vote-service
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '8550:8550'
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vote-service.entrypoints=websecure
+      - traefik.http.routers.vote-service.rule=Host($VOTEc_SERVICE_HOST)
+      - traefik.http.routers.vote-service.tls.certresolver=cloudflare
+      - traefik.http.services.vote-service.loadbalancer.server.port=${PORT}
+    env_file:
+      - ./.env
+      - ../../../.env
+    restart: unless-stopped
+
+networks:
+  web:
+    external: true

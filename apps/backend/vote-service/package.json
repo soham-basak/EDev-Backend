@@ -1,8 +1,9 @@
 {
   "name": "vote-service",
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsx ./esbuild.config.ts",
+    "build": "node ./esbuild.config.js",
     "start": "node ./dist/index.cjs"
   },
   "dependencies": {

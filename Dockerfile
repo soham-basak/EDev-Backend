@@ -1,16 +1,12 @@
-FROM node:20-slim AS base
+FROM node:20-alpine
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+ARG service_name
+ENV SERVICE_NAME=$service_name
 
-WORKDIR /
+WORKDIR /app
 
-COPY . .
+COPY /apps/backend/${SERVICE_NAME}/dist /app/
 
-RUN pnpm i --frozen-lockfile --prod=true
+EXPOSE 3000 5000 8550
 
-FROM base AS build
-RUN pnpm build
-
-CMD [ "pnpm", "start" ]
+CMD ["node", "index.cjs"]

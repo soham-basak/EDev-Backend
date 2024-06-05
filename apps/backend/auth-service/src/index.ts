@@ -7,7 +7,7 @@ async function main() {
   // Returns an the instance of the hono server.
   const server = createServer();
 
-  const PORT = Number(config.port ?? '3000');
+  const PORT = Number(config.port);
 
   try {
     serve({

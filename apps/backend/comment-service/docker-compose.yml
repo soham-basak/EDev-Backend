@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  comment-service:
+    container_name: comment-service
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+      args:
+        service_name: comment-service
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '5000:5000'
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.comment-service.entrypoints=websecure
+      - traefik.http.routers.comment-service.rule=Host($COMMENT_SERVICE_HOST)
+      - traefik.http.routers.comment-service.tls.certresolver=cloudflare
+      - traefik.http.services.comment-service.loadbalancer.server.port=${PORT}
+    env_file:
+      - ./.env
+      - ../../../.env
+    restart: unless-stopped
+
+networks:
+  web:
+    external: true
