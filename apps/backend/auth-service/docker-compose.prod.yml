@@ -1,0 +1,41 @@
+---
+services:
+  auth_service_db:
+    container_name: auth_service_db
+    image: postgres:latest
+    networks:
+      - web
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  auth_service:
+    image: ghcr.io/nilotpaul/evolve-as-dev/auth-service:latest
+    container_name: auth_service
+    networks:
+      - web
+    env_file:
+      - ./.env
+      - ../../../.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.auth_service_insecure.entrypoints=web
+      - traefik.http.routers.auth_service_insecure.rule=Host(`$AUTH_SERVICE_HOST`)
+      - traefik.http.routers.auth_service.entrypoints=websecure
+      - traefik.http.routers.auth_service.rule=Host(`$AUTH_SERVICE_HOST`)
+      - traefik.http.routers.auth_service.tls.certresolver=cloudflare
+      - traefik.http.services.auth_service.loadbalancer.server.port=${PORT}
+    depends_on:
+      - auth_service_db
+    restart: unless-stopped
+
+volumes:
+  auth_data:
+
+networks:
+  web:
+    external: true

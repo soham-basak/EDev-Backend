@@ -10,10 +10,10 @@ const sql = new pg.Pool({
   password: env.POSTGRES_PASSWORD,
   database: env.POSTGRES_DB,
   port: 5432,
-  host: env.POSTGRES_HOST ?? 'localhost',
+  host: env.NODE_ENV === 'PROD' ? env.POSTGRES_HOST : 'localhost',
 });
 
-sql.connect().catch((err) => {
+await sql.connect().catch((err) => {
   console.error('db connection error: ', err);
 });
 
