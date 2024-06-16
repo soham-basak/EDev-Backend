@@ -1,0 +1,23 @@
+---
+services:
+  comment_service:
+    image: ghcr.io/nilotpaul/evolve-as-dev/comment-service:latest
+    container_name: comment_service
+    networks:
+      - web
+    env_file:
+      - ./.env
+      - ../../../.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.comment_service_insecure.entrypoints=web
+      - traefik.http.routers.comment_service_insecure.rule=Host(`$COMMENT_SERVICE_HOST`)
+      - traefik.http.routers.comment_service.entrypoints=websecure
+      - traefik.http.routers.comment_service.rule=Host(`$COMMENT_SERVICE_HOST`)
+      - traefik.http.routers.comment_service.tls.certresolver=cloudflare
+      - traefik.http.services.comment_service.loadbalancer.server.port=${PORT}
+    restart: unless-stopped
+    
+networks:
+  web:
+    external: true

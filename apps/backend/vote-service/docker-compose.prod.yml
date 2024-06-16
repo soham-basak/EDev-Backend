@@ -1,0 +1,23 @@
+---
+services:
+  vote_service:
+    image: ghcr.io/nilotpaul/evolve-as-dev/vote-service:latest
+    container_name: vote_service
+    networks:
+      - web
+    env_file:
+      - ./.env
+      - ../../../.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vote_service_insecure.entrypoints=web
+      - traefik.http.routers.vote_service_insecure.rule=Host(`$VOTE_SERVICE_HOST`)
+      - traefik.http.routers.vote_service.entrypoints=websecure
+      - traefik.http.routers.vote_service.rule=Host(`$VOTE_SERVICE_HOST`)
+      - traefik.http.routers.vote_service.tls.certresolver=cloudflare
+      - traefik.http.services.vote_service.loadbalancer.server.port=${PORT}
+    restart: unless-stopped
+    
+networks:
+  web:
+    external: true
