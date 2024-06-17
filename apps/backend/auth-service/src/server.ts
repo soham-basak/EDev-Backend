@@ -10,7 +10,7 @@ import { makeDomain } from './utils';
 
 // createServer() creates the main server(entry point) config where
 // all of the routes and middlewares are registered.
-const createServer = () => {
+const createServer = async () => {
   // creates a new instance of hono.
   // all routes are prefixed with '/api/v1'
   const app = new Hono<{ Variables: Variables }>().basePath('/api/v1');
