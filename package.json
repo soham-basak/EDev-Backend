@@ -1,5 +1,6 @@
 {
-  "name": "evolveasdev",
+  "name": "edev-backend",
+  "version": "2.2.5"
   "private": true,
   "scripts": {
     "build": "turbo build",
