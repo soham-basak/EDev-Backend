@@ -1,5 +1,6 @@
 {
   "name": "mailer-service",
+  "version": "2.3.1",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/collection.watch.ts"

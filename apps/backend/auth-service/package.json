@@ -1,5 +1,6 @@
 {
   "name": "auth-service",
+  "version": "2.4.6",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "node ./esbuild.config.js",

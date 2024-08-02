@@ -1,5 +1,6 @@
 {
   "name": "vote-service",
+  "version": "2.1.2",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
