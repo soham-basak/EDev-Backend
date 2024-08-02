@@ -1,0 +1,24 @@
+{
+  "name": "email-service",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "node ./esbuild.config.js",
+    "start": "node ./dist/index.cjs"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.12.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.23.0",
+    "hono": "^4.5.1",
+    "mongoose": "^8.5.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@hono/prometheus": "^1.0.1",
+    "@types/node": "^20.11.17",
+    "prom-client": "^15.1.3",
+    "tsx": "^4.7.1"
+  }
+}
