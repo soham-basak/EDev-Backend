@@ -104,6 +104,31 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
 
+  apps/backend/blog-services:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^1.12.0
+        version: 1.12.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      hono:
+        specifier: ^4.5.1
+        version: 4.5.3
+      mongoose:
+        specifier: ^8.5.1
+        version: 8.5.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.17
+        version: 20.12.12
+      tsx:
+        specifier: ^4.7.1
+        version: 4.10.2
+
   apps/backend/comment-service:
     dependencies:
       '@hono/node-server':
