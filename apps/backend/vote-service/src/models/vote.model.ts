@@ -1,5 +1,16 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { IVote, IUserVote } from '../../types';
+
+interface IVote extends Document {
+  blogId: string;
+  votes: IUserVote[];
+  voteCount: number;
+  updateVoteCount(): number;
+}
+
+interface IUserVote {
+  userId: string;
+  vote: number;
+}
 
 const userVoteSchema: Schema<IUserVote> = new Schema(
   {
