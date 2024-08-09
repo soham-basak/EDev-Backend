@@ -70,11 +70,11 @@ export const updateCommentHandler = async (
   c: Context<{ Variables: Variables }, '', UpdateCommentValidator>
 ) => {
   try {
-    const { commentId, commentText } = c.req.valid('json');
+    const { commentId, blogId, commentText } = c.req.valid('json');
     const user = c.get('user') as User;
 
     // Find the comment by its ID
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findOne({ _id: commentId, blogId });
 
     if (!comment) {
       throw new HTTPException(404, {
@@ -91,7 +91,13 @@ export const updateCommentHandler = async (
 
     // Update the comment text
     comment.commentText = commentText;
-    await comment.save();
+    const updatedComment = await comment.save();
+
+    if (!updatedComment) {
+      throw new HTTPException(500, {
+        message: 'Failed to update the comment',
+      });
+    }
 
     return c.json(comment, 200);
   } catch (error) {
@@ -108,11 +114,11 @@ export const deleteCommentHandler = async (
   c: Context<{ Variables: Variables }, '', DeleteCommentValidator>
 ) => {
   try {
-    const { commentId } = c.req.valid('json');
+    const { commentId, blogId } = c.req.valid('param');
     const user = c.get('user') as User;
 
     // Find the comment by its ID
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findOne({ _id: commentId, blogId });
 
     if (!comment) {
       throw new HTTPException(404, {
@@ -128,7 +134,13 @@ export const deleteCommentHandler = async (
     }
 
     // Delete the comment
-    await Comment.deleteOne({ _id: commentId });
+    const deletedComment = await Comment.deleteOne({ _id: commentId, blogId });
+
+    if (!deletedComment || deletedComment.deletedCount === 0) {
+      throw new HTTPException(500, {
+        message: 'Failed to delete comment',
+      });
+    }
 
     return c.json(comment, 200);
   } catch (error) {

@@ -13,11 +13,13 @@ const getAllCommentsSchema = z.object({
 
 const updateCommentSchema = z.object({
   commentId: z.string(),
+  blogId: z.string().min(2, { message: 'blogId is required' }),
   commentText: z.string(),
 });
 
 const deleteCommentSchema = z.object({
   commentId: z.string(),
+  blogId: z.string(),
 });
 
 export const createCommentValidator = zValidator('json', createCommentSchema, (result, c) => {
@@ -38,7 +40,7 @@ export const updateCommentValidator = zValidator('json', updateCommentSchema, (r
   }
 });
 
-export const deleteCommentValidator = zValidator('json', deleteCommentSchema, (result, c) => {
+export const deleteCommentValidator = zValidator('param', deleteCommentSchema, (result, c) => {
   if (!result.success) {
     return c.json({ errorMsg: result.error.flatten().fieldErrors }, 422);
   }

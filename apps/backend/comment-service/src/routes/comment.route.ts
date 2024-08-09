@@ -17,7 +17,12 @@ const router = new Hono<{ Variables: Variables }>();
 
 router.post('/create', auth.withAuthMiddleware, createCommentValidator, createCommentHandler);
 router.get('/comments/:blogId', getAllCommentsValidator, getAllCommentsHandler);
-router.post('/update', auth.withAuthMiddleware, updateCommentValidator, updateCommentHandler);
-router.delete('/delete', auth.withAuthMiddleware, deleteCommentValidator, deleteCommentHandler);
+router.put('/update', auth.withAuthMiddleware, updateCommentValidator, updateCommentHandler);
+router.delete(
+  '/delete/:commentId/:blogId',
+  auth.withAuthMiddleware,
+  deleteCommentValidator,
+  deleteCommentHandler
+);
 
 export default router;
