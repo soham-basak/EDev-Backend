@@ -10,11 +10,11 @@ const sql = new pg.Client({
   password: env.POSTGRES_PASSWORD,
   database: env.POSTGRES_DB,
   port: Number(env.POSTGRES_PORT),
-  host: env.NODE_ENV === 'PROD' ? env.POSTGRES_HOST : 'localhost',
+  host: env.POSTGRES_HOST,
 });
 
 sql.connect().catch((err) => {
-  console.error('db connection error: ', err);
+  throw new Error(`Database connection error: ${err}`);
 });
 
 // Instance of Drizzle which allows to interact

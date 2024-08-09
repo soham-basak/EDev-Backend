@@ -24,13 +24,14 @@ export const createCommentHandler = async (
     const newComment = new Comment({
       blogId,
       userId: user.id,
+      userImage: user?.image,
       userName: user.username,
       commentText,
     });
 
     await newComment.save();
 
-    return c.json('comment created', 201);
+    return c.json(newComment, 201);
   } catch (err) {
     console.error('createCommentHanlder error: ', err);
 
@@ -92,7 +93,7 @@ export const updateCommentHandler = async (
     comment.commentText = commentText;
     await comment.save();
 
-    return c.json('comment updated', 200);
+    return c.json(comment, 200);
   } catch (error) {
     console.error('updateCommentHandler error:', error);
 
@@ -127,9 +128,9 @@ export const deleteCommentHandler = async (
     }
 
     // Delete the comment
-    await Comment.findByIdAndDelete(commentId);
+    await Comment.deleteOne({ _id: commentId });
 
-    return c.json('comment deleted', 200);
+    return c.json(comment, 200);
   } catch (error) {
     console.error('deleteCommentHandler error:', error);
 

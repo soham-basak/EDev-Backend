@@ -34,14 +34,14 @@ const createServer = async () => {
     })
   );
 
+  app.get('/healthcheck', (c) => {
+    return c.text('OK', 200);
+  });
+
   // sessionMiddleware runs on every request.
   // Validates the user session by the sessionId
   // in cookies with DB and adds the user in context.
   app.use('*', sessionMiddleware);
-
-  app.get('/healthcheck', (c) => {
-    return c.text('OK', 200);
-  });
 
   // Routes
   app.route('/auth', authRoutes);

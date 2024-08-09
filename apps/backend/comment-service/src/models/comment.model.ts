@@ -14,6 +14,9 @@ const commentSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  userImage: {
+    type: String,
+  },
   commentText: {
     type: String,
     required: true,

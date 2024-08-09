@@ -85,6 +85,8 @@ export const githubCallbackHandler: Handler = async (c: Context<{}, '', Callback
 
     const storedState = getCookie(c, 'github_oauth_state') ?? null;
 
+    console.log(code, state, storedState);
+
     if (!code || !state || !storedState || state !== storedState) {
       console.error('githubCallbackHandler error: ', 'query or cookie invalid');
       throw new HTTPException(400, {
